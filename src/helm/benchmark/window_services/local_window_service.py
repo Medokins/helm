@@ -42,9 +42,10 @@ class LocalWindowService(ConfigurableWindowService, ABC):
         if max_length is None:
             max_length = self.max_request_length
 
+        # encode=False because watsonx_ai can't return token_ids, only
         response: TokenizationRequestResult = self.service.tokenize(
             TokenizationRequest(
-                text, tokenizer=self.tokenizer_name, encode=True, truncation=truncation, max_length=max_length
+                text, tokenizer=self.tokenizer_name, encode=False, truncation=truncation, max_length=max_length
             )
         )
         return EncodeResult(text=text, tokens=response.tokens)
