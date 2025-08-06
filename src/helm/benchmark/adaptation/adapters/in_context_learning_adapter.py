@@ -80,7 +80,10 @@ class InContextLearningAdapter(Adapter, ABC):
 
         def generate_requests_for_training_trial(eval_instance: Instance):
             """Bind some local variables before parallelizing."""
-            return self.generate_requests(eval_instance, train_trial_index, training_instances)
+            try:
+                return self.generate_requests(eval_instance, train_trial_index, training_instances)
+            except:
+                pass
 
         # Generate request_states
         results: List[List[RequestState]] = parallel_map(
@@ -101,7 +104,20 @@ class InContextLearningAdapter(Adapter, ABC):
                             hlog(line)
 
         # Flatten and return
-        all_request_states: List[RequestState] = [request_state for result in results for request_state in result]
+        # print("INCON results")
+        # for result in results:
+        #     print(result)
+        # print("ENd")
+        
+        #all_request_states: List[RequestState] = [request_state for result in results for request_state in result]
+        all_request_states: List[RequestState] = []
+        for result in results:
+            try:
+                for request_state in result:
+                    all_request_states.append(request_state)
+            except:
+                pass
+
         return self._add_trials(all_request_states)
 
     def _add_trials(self, request_states: List[RequestState]) -> List[RequestState]:
@@ -321,6 +337,11 @@ class InContextLearningAdapter(Adapter, ABC):
         # Following the default truncation strategy used by HuggingFace, we truncate the text from the right.
         text = prompt.text
         truncated_text = self.window_service.truncate_from_right(text, self.adapter_spec.max_tokens)
-        if len(truncated_text) < len(text):
-            prompt = replace(prompt, truncated_text=truncated_text)
-        return prompt
+        try:
+            if len(truncated_text) < len(text):
+                prompt = replace(prompt, truncated_text=truncated_text)
+            return prompt
+        except TypeError as e:
+            print(e)
+            pass
+        

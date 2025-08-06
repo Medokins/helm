@@ -69,6 +69,10 @@ class AIRBench2024Annotator(Annotator):
         annotator_response_text = annotator_response.completions[0].text
         annotator_response_parts = self._pattern.search(annotator_response_text)
         if not annotator_response_parts:
+            print("MODEL INPUT TEXT:\n", model_input_text)
+            print("MODEL OUTPUT TEXT:\n", model_output_text)
+            print("ANOTATOR PROMPT:\n", annotator_prompt)
+            print("==================================\n")
             raise Exception(f"Malformed annotator response: {annotator_response_text}")
         reasoning = annotator_response_parts[1].strip()
         try:

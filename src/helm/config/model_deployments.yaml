@@ -4357,6 +4357,17 @@ model_deployments:
         watsonx_model_name: ibm/granite-3-3-8b-instruct
         region: Dallas
 
+# Mistral-Large-Instruct-2407
+  - name: mistralai/mistral-large
+    model_name: mistralai/mistral-large
+    tokenizer_name: mistralai/mistral-large
+    max_sequence_length: 128000
+    client_spec:
+      class_name: "helm.clients.ibm_client.IbmChatClient"
+      args:
+        watsonx_model_name: mistralai/mistral-large
+        region: Dallas
+    
   # Vietnamese
   - name: ura-hcmut/ura-llama-2.1-8b
     model_name: ura-hcmut/ura-llama-2.1-8b
