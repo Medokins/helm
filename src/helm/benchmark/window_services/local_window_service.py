@@ -52,7 +52,6 @@ class LocalWindowService(ConfigurableWindowService, ABC):
         try:
             return EncodeResult(text=text, tokens=response.tokens)
         except AttributeError as e:
-            print(e)
             pass
 
     def decode(self, tokens: List[TokenizationToken], normalized_text: Optional[str] = None) -> str:
@@ -122,6 +121,5 @@ class LocalWindowService(ConfigurableWindowService, ABC):
                 result = result[:-1]
             return result
         except Exception as e:
-            print(e)
             pass
         

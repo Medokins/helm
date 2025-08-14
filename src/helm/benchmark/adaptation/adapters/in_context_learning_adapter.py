@@ -104,12 +104,6 @@ class InContextLearningAdapter(Adapter, ABC):
                             hlog(line)
 
         # Flatten and return
-        # print("INCON results")
-        # for result in results:
-        #     print(result)
-        # print("ENd")
-        
-        #all_request_states: List[RequestState] = [request_state for result in results for request_state in result]
         all_request_states: List[RequestState] = []
         for result in results:
             try:
@@ -342,6 +336,5 @@ class InContextLearningAdapter(Adapter, ABC):
                 prompt = replace(prompt, truncated_text=truncated_text)
             return prompt
         except TypeError as e:
-            print(e)
             pass
         
