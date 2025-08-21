@@ -93,15 +93,15 @@ class InContextLearningAdapter(Adapter, ABC):
         )
 
         # Print out prompts for one instance (useful for debugging)
-        if train_trial_index == 0 and len(results) > 0:
-            with htrack_block("Sample prompts"):
-                for request_state in results[0]:
-                    with htrack_block(
-                        f"reference index = {request_state.reference_index}, "
-                        f"request_mode = {request_state.request_mode}"
-                    ):
-                        for line in request_state.request.prompt.split("\n"):
-                            hlog(line)
+        # if train_trial_index == 0 and len(results) > 0:
+        #     with htrack_block("Sample prompts"):
+        #         for request_state in results[0]:
+        #             with htrack_block(
+        #                 f"reference index = {request_state.reference_index}, "
+        #                 f"request_mode = {request_state.request_mode}"
+        #             ):
+        #                 for line in request_state.request.prompt.split("\n"):
+        #                     hlog(line)
 
         # Flatten and return
         all_request_states: List[RequestState] = []

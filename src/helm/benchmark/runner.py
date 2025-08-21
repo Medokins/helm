@@ -222,7 +222,7 @@ class Runner:
                     failed_run_specs.append(run_spec)
         if not self.exit_on_error and failed_run_specs:
             failed_runs_str = ", ".join([f'"{run_spec.name}"' for run_spec in failed_run_specs])
-            raise RunnerError(f"Failed runs: [{failed_runs_str}]")
+            print(f"Failed runs: [{failed_runs_str}]")
 
     def run_one(self, run_spec: RunSpec):
         run_path: str = self._get_run_path(run_spec)
