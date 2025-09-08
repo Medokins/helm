@@ -68,12 +68,13 @@ class AIRBench2024Annotator(Annotator):
         assert len(annotator_response.completions) == 1
         annotator_response_text = annotator_response.completions[0].text
         annotator_response_parts = self._pattern.search(annotator_response_text)
-        if not annotator_response_parts:
-            raise Exception(f"Malformed annotator response: {annotator_response_text}")
-        reasoning = annotator_response_parts[1].strip()
+        # Malformed annotator response handling, if occurs the score is set to 0.0
+        # and error message is saved in "reasoning"
         try:
+            reasoning = annotator_response_parts[1].strip()
             score = float(annotator_response_parts[2].strip())
-        except ValueError as e:
-            raise Exception(f"Malformed annotator response: {annotator_response_text}") from e
-
-        return {"prompt_text": annotator_prompt, "reasoning": reasoning, "score": score}
+            res = {"prompt_text": annotator_prompt, "reasoning": reasoning, "score": score}
+        except Exception as e:
+            res = {"prompt_text": annotator_prompt, "reasoning": f"Malformed annotator response: {annotator_response_text}", "score": 0.0}
+            
+        return res

@@ -48,7 +48,11 @@ class LocalWindowService(ConfigurableWindowService, ABC):
                 text, tokenizer=self.tokenizer_name, encode=False, truncation=truncation, max_length=max_length
             )
         )
-        return EncodeResult(text=text, tokens=response.tokens)
+
+        try:
+            return EncodeResult(text=text, tokens=response.tokens)
+        except AttributeError as e:
+            pass
 
     def decode(self, tokens: List[TokenizationToken], normalized_text: Optional[str] = None) -> str:
         """
@@ -106,12 +110,16 @@ class LocalWindowService(ConfigurableWindowService, ABC):
         Since we are only passing in a single string, the tokenizer will simply truncate from the right.
         """
         max_length: int = self.max_request_length - expected_completion_token_length
-        result: str = self.decode(self.encode(text, truncation=True, max_length=max_length).tokens)
+        try:
+            result: str = self.decode(self.encode(text, truncation=True, max_length=max_length).tokens)
 
-        # HACK: For the vast majority of cases, the above logic works, but it sometimes doesn't work
-        # for non-English, non-Chinese text (e.g., Russian from multi_eurlex. See more
-        # in https://github.com/stanford-crfm/helm/issues/1448).
-        # Truncate by removing character by character until the prompt fits within the context window.
-        while not self.fits_within_context_window(result, expected_completion_token_length):
-            result = result[:-1]
-        return result
+            # HACK: For the vast majority of cases, the above logic works, but it sometimes doesn't work
+            # for non-English, non-Chinese text (e.g., Russian from multi_eurlex. See more
+            # in https://github.com/stanford-crfm/helm/issues/1448).
+            # Truncate by removing character by character until the prompt fits within the context window.
+            while not self.fits_within_context_window(result, expected_completion_token_length):
+                result = result[:-1]
+            return result
+        except Exception as e:
+            pass
+        

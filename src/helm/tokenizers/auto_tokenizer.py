@@ -61,9 +61,14 @@ class AutoTokenizer(Tokenizer):
     def tokenize(self, request: TokenizationRequest) -> TokenizationRequestResult:
         """Tokenizes based on the name of the tokenizer (e.g., huggingface/gpt2)."""
 
-        @retry_tokenizer_request
         def tokenize_with_retry(tokenizer: Tokenizer, request: TokenizationRequest) -> TokenizationRequestResult:
-            return tokenizer.tokenize(request)
+            try:
+                return tokenizer.tokenize(request)
+            except ValueError as e:
+                if "Failed to tokenize text with WatsonxTokenizer tokenizer: Failure during tokenize." in str(e):
+                    pass
+                else:
+                    raise e
 
         tokenizer: Tokenizer = self._get_tokenizer(request.tokenizer)
 
