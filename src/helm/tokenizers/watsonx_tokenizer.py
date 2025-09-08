@@ -15,7 +15,7 @@ from pathlib import Path
 import pandas as pd, json, os
 
 CSV_PATH = Path(os.getenv("WATSONX_TOKENIZER_LOG",
-                          "/Users/mikolajcharchut/airbench/helm-evaluation/benchmark_output/runs/prod/watsonx_tokenizer_calls.csv"))
+                          "/helm-evaluation/benchmark_output/runs/prod/watsonx_tokenizer_calls.csv"))
 CSV_LOCK = Lock()
 
 
